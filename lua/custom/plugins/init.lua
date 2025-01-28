@@ -50,5 +50,24 @@ return {
       -- VimTeX configuration goes here, e.g.
       vim.g.vimtex_view_method = 'zathura'
     end,
+    cond = function()
+      return (vim.fn.executable 'pdflatex' == 1) and (vim.fn.has 'linux' == 1)
+    end,
+  },
+  {
+    'alexghergh/nvim-tmux-navigation',
+    opts = {
+      keybindings = {
+        left = '<C-h>',
+        down = '<C-j>',
+        up = '<C-k>',
+        right = '<C-l>',
+        last_active = '<C-\\>',
+        next = '<C-Space>',
+      },
+    },
+    cond = function()
+      return (vim.fn.executable 'make' == 1) and (vim.fn.has 'linux' == 1)
+    end,
   },
 }
