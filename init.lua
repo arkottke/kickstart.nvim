@@ -885,13 +885,13 @@ require('lazy').setup({
       -- - sr)'  - [S]urround [R]eplace [)] [']
       require('mini.surround').setup {
         mappings = {
-          add = 'gsa', -- Add surrounding in Normal and Visual modes
-          delete = 'gsd', -- Delete surrounding
-          find = 'gsf', -- Find surrounding (to the right)
-          find_left = 'gsF', -- Find surrounding (to the left)
-          highlight = 'gsh', -- Highlight surrounding
-          replace = 'gsr', -- Replace surrounding
-          update_n_lines = 'gsn', -- Update `n_lines`
+          add = 'gza', -- Add surrounding in Normal and Visual modes
+          delete = 'gzd', -- Delete surrounding
+          find = 'gzf', -- Find surrounding (to the right)
+          find_left = 'gzF', -- Find surrounding (to the left)
+          highlight = 'gzh', -- Highlight surrounding
+          replace = 'gzr', -- Replace surrounding
+          update_n_lines = 'gzn', -- Update `n_lines`
         },
       }
 
@@ -936,6 +936,10 @@ require('lazy').setup({
         'vim',
         'vimdoc',
         'yaml',
+      },
+      -- Disable latex; prefer vimtex
+      ignore_install = {
+        'latex',
       },
       -- Autoinstall languages that are not installed
       auto_install = true,
