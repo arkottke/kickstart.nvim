@@ -70,4 +70,5 @@ return {
       return (vim.fn.executable 'make' == 1) and (vim.fn.has 'linux' == 1)
     end,
   },
+  { "catppuccin/nvim", name = "catppuccin", priority = 1000 }
 }
