@@ -74,4 +74,7 @@ return {
   {
     'github/copilot.vim',
   },
+  {
+    'axieax/urlview.nvim',
+  }
 }
