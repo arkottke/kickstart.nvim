@@ -962,7 +962,6 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-<<<<<<< HEAD
       ensure_installed = {
         'bash',
         'bibtex',
@@ -983,23 +982,6 @@ require('lazy').setup({
       -- Disable latex; prefer vimtex
       ignore_install = {
         'latex',
-      },
-      ensure_installed = {
-        'bash',
-        'bibtex',
-        'c',
-        'diff',
-        'html',
-        'json',
-        'lua',
-        'luadoc',
-        'markdown',
-        'markdown_inline',
-        'python',
-        'query',
-        'vim',
-        'vimdoc',
-        'yaml',
       },
       -- Autoinstall languages that are not installed
       auto_install = true,
