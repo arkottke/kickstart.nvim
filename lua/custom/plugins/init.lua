@@ -34,8 +34,8 @@ return {
   {
     'ggandor/leap.nvim',
     config = function()
-      vim.keymap.set({'n', 'x', 'o'}, 's', '<Plug>(leap)')
-      vim.keymap.set('n',             'S', '<Plug>(leap-from-window)')
+      vim.keymap.set({ 'n', 'x', 'o' }, 's', '<Plug>(leap)')
+      vim.keymap.set('n', 'S', '<Plug>(leap-from-window)')
     end,
     -- `cond` is a condition used to determine whether this plugin should be
     -- installed and loaded.
@@ -76,15 +76,16 @@ return {
     'zbirenbaum/copilot.lua',
     requires = {
       'copilotlsp-nvim/copilot-lsp', -- (optional) for NES functionality
+      'giuxtaposition/blink-cmp-copilot',
     },
     cmd = 'Copilot',
     build = ':Copilot auth',
     event = 'BufReadPost',
     opts = {
       suggestion = {
-        enabled = not vim.g.ai_cmp,
+        -- Use blink for completion
+        enabled = false,
         auto_trigger = true,
-        hide_during_completion = vim.g.ai_cmp,
         keymap = {
           accept = false, -- handled by nvim-cmp / blink.cmp
           next = '<M-]>',
