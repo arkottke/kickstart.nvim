@@ -8,15 +8,6 @@ vim.pack.add({
 })
 
 require("copilot").setup({
-	-- Disable built-in UI modules so they do not conflict with blink.cmp
-	suggestion = {
-		enabled = false,
-		auto_trigger = true,
-		keymap = {
-			accept = false, -- handled by nvim-cmp / blink.cmp
-			next = '<M-]>',
-			prev = '<M-[>',
-		},
-	},
+	suggestion = { enabled = false },
 	panel = { enabled = false },
 })
