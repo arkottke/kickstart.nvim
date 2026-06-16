@@ -873,17 +873,20 @@ do
       documentation = { auto_show = true, auto_show_delay_ms = 500 },
     },
 
-    sources = {
-      default = { 'lsp', 'path', 'snippets', 'copilot' },
-      providers = {
-        copilot = {
-          name = 'copilot',
-          module = 'blink-cmp-copilot',
-          score_offset = 100,
-          async = true,
+    sources = (function()
+      if vim.tbl_contains({ 'bubo', 'falco' }, vim.fn.hostname()) then return { default = { 'lsp', 'path', 'snippets' } } end
+      return {
+        default = { 'lsp', 'path', 'snippets', 'copilot' },
+        providers = {
+          copilot = {
+            name = 'copilot',
+            module = 'blink-cmp-copilot',
+            score_offset = 100,
+            async = true,
+          },
         },
-      },
-    },
+      }
+    end)(),
 
     snippets = { preset = 'luasnip' },
 
@@ -915,7 +918,7 @@ do
   vim.pack.add { { src = gh 'nvim-treesitter/nvim-treesitter', version = 'main' } }
 
   -- Ensure basic parsers are installed
-  local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
+  local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'yaml' }
   require('nvim-treesitter').install(parsers)
 
   ---@param buf integer

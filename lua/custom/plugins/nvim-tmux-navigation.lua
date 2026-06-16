@@ -1,6 +1,6 @@
 vim.pack.add { 'https://github.com/alexghergh/nvim-tmux-navigation' }
 
-local ntv = require('nvim-tmux-navigation')
+local ntv = require 'nvim-tmux-navigation'
 ntv.setup {}
 
 vim.keymap.set('n', '<C-h>', ntv.NvimTmuxNavigateLeft, { desc = 'Navigate Left' })

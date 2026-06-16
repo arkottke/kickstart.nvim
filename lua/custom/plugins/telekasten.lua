@@ -1,10 +1,10 @@
-vim.pack.add({
-	'https://github.com/renerocksai/telekasten.nvim',
-	'https://github.com/nvim-telescope/telescope.nvim'
-})
+vim.pack.add {
+  'https://github.com/renerocksai/telekasten.nvim',
+  'https://github.com/nvim-telescope/telescope.nvim',
+}
 
 require('telekasten').setup {
-	home = vim.fn.expand '~/zettelkasten',
+  home = vim.fn.expand '~/zettelkasten',
 }
 
 -- Launch panel if nothing is typed after <leader>n
