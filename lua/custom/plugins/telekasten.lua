@@ -23,5 +23,9 @@ vim.keymap.set('n', '<leader>nI', '<cmd>Telekasten insert_img_link<CR>')
 vim.keymap.set('n', '<leader>nt', '<cmd>Telekasten toggle_todo<CR>')
 vim.keymap.set('v', '<leader>nt', ':Telekasten toggle_todo<CR>')
 
--- Call insert link automatically when we start typing a link
-vim.keymap.set('i', '[[', '<cmd>Telekasten insert_link<CR>')
+-- Call insert link automatically when we start typing a link (markdown buffers only,
+-- so this doesn't hijack `[[` used for Lua long strings/comments elsewhere)
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'markdown',
+  callback = function(args) vim.keymap.set('i', '[[', '<cmd>Telekasten insert_link<CR>', { buffer = args.buf }) end,
+})
