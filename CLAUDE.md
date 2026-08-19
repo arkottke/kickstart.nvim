@@ -4,23 +4,19 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-This is a personal Neovim configuration with **zero third-party plugins**. It started as a fork of
-[kickstart.nvim](https://github.com/nvim-lua/kickstart.nvim) (which used `vim.pack` to install ~25 plugins) and was
-rewritten to use only Neovim builtins (the 0.11+ default LSP client, native completion, native diagnostics, native
-treesitter, netrw, quickfix, `vim.ui.select`/`vim.ui.input`) plus a handful of small hand-written Lua modules that
-wrap those builtins (and, where unavoidable, the `git`/`rg`/`fd` CLIs) to approximate a plugin's UX under the *same
-keymaps* as the original config. There is no plugin manager and no lockfile.
+This is a personal Neovim configuration forked from [kickstart.nvim](https://github.com/nvim-lua/kickstart.nvim) — a single-file, well-documented starting point. The upstream is tracked as `upstream/master`.
 
-Because there's no auto-installer, LSP servers (`lua-language-server`, `pyright-langserver`) and CLI formatters
-(`stylua`, `ruff`, `prettier`, `latexindent`) must be installed via the system package manager and be on `$PATH`.
+Plugin management uses **`vim.pack`**, Neovim's built-in plugin manager (not lazy.nvim). Plugins are installed on first launch and updated via `:lua vim.pack.update()`.
 
 ## Formatting
 
 All Lua files must be formatted with **StyLua** before committing. The `.stylua.toml` config specifies:
 - 160-column width, 2-space indent, single quotes, always-collapse simple statements
 
-Check formatting: `stylua --check .`
+Check formatting: `stylua --check .`  
 Fix formatting: `stylua .`
+
+The CI workflow (`.github/workflows/stylua.yml`) enforces this on PRs to the upstream repo.
 
 ## Architecture
 
@@ -28,50 +24,38 @@ Fix formatting: `stylua .`
 
 `init.lua` is the single configuration file, organized into 9 numbered `do...end` blocks:
 
-1. **Foundation** — options, leader key, base keymaps, autocmds, diagnostics (all builtin)
-2. **UI** — `habamax` colorscheme (builtin), netrw config, `custom.statusline`, `custom.todo_highlight`
-3. **Search & Navigation** — `custom.pickers` (grep/wildmenu setup + all `<leader>s*` keymaps)
-4. **LSP** — native `vim.lsp` client; `lua_ls` and `pyright` configured manually (no nvim-lspconfig, so each
-   server's `cmd`/`filetypes`/`root_markers` is spelled out). Most `gr*` keymaps are Neovim's own >=0.11 defaults
-   (`:help lsp-defaults`); only the gaps (`grd`, `grD`, `gW`) are added here.
-5. **Formatting** — `custom.format` (`<leader>f`)
-6. **Autocomplete & Snippets** — native `vim.lsp.completion` (enabled per-buffer on `LspAttach`) + `vim.snippet`
-7. **Treesitter** — attaches to whatever parsers are bundled with the Neovim build (no auto-installer); folding via
-   the builtin `vim.treesitter.foldexpr()`
-8. **Editing enhancements** — `custom.surround`, `custom.leap`, `custom.whichkey`, `custom.gitsigns`,
-   `custom.tmux_nav`
-9. **Custom** — loads `custom.keymaps`
+1. **Foundation** — options, leader key, keymaps, autocmds, diagnostics
+2. **Plugin Manager** — `vim.pack` setup and `PackChanged` build hooks (telescope-fzf-native, LuaSnip, nvim-treesitter)
+3. **UI/Core UX** — guess-indent, gitsigns, which-key, tokyonight colorscheme, todo-comments, mini.nvim (ai, surround, statusline)
+4. **Search & Navigation** — Telescope with fzf-native, ui-select; LSP picker keymaps registered on `LspAttach`
+5. **LSP** — fidget, nvim-lspconfig, Mason + mason-lspconfig + mason-tool-installer; active servers: `lua_ls` (with stylua formatting disabled) and `stylua`
+6. **Formatting** — conform.nvim with `<leader>f`; format-on-save is disabled by default (enable per-filetype in `enabled_filetypes`)
+7. **Autocomplete & Snippets** — blink.cmp (v1.*) + LuaSnip (v2.*) with `default` keymap preset
+8. **Treesitter** — nvim-treesitter on `main` branch; parsers auto-install on `FileType` event
+9. **Optional/Custom** — loads `kickstart.plugins.gitsigns` and all files under `lua/custom/plugins/`
 
-### Hand-rolled modules (`lua/custom/*.lua`)
+### Custom plugins (`lua/custom/plugins/`)
 
-Each replaces one plugin from the original config, using only builtin APIs (extmarks, `getcharstr()`,
-`searchpairpos()`, `vim.system()`, `vim.ui.select`/`vim.ui.input`, the quickfix list):
+`init.lua` auto-loads every `*.lua` file in this directory (except itself). Current plugins:
 
-| File | Replaces | Notes |
+| File | Plugin | Purpose |
 |---|---|---|
-| `statusline.lua` | mini.statusline | mode/git branch/diagnostics via `statusline` option |
-| `surround.lua` | mini.surround | `sa`/`sd`/`sr`; quote matching is same-line only, brackets use `searchpairpos()` |
-| `leap.lua` | leap.nvim | `s`/`S`; 2-char search + label overlay, visible-window only |
-| `whichkey.lua` | which-key.nvim | bound to bare `<leader>`; shows continuations by scanning `nvim_get_keymap()` |
-| `gitsigns.lua` | gitsigns.nvim | shells out to `git diff -U0`/`apply`/`blame`/`show`; no word-diff toggle or repo-wide qflist |
-| `tmux_nav.lua` | nvim-tmux-navigation | `<C-hjkl>` crosses into tmux panes via `tmux select-pane` |
-| `todo_highlight.lua` | todo-comments.nvim | highlight-only, via `matchadd()` |
-| `format.lua` | conform.nvim | LSP formatting by default; `ruff`/`prettier`/`latexindent` via `vim.system()` for python/markdown/tex |
-| `pickers.lua` | telescope.nvim | `vim.ui.select`/`vim.ui.input` + quickfix (via `getqflist({lines=...})`, no file needed) |
-| `keymaps.lua` | (was already builtin) | `<leader>rr`/`<F5>` run-current-file in a terminal split |
+| `catppuccin.lua` | catppuccin/nvim | Alternative colorscheme |
+| `copilot.lua` | copilot.lua + copilot-lsp + blink-cmp-copilot | GitHub Copilot via blink.cmp |
+| `leap.lua` | leap.nvim | Motion with `s`/`S` |
+| `nvim-tmux-navigation.lua` | nvim-tmux-navigation | `<C-hjkl>` across nvim+tmux panes |
+| `telekasten.lua` | telekasten.nvim | Zettelkasten notes at `~/zettelkasten`; `<leader>n` prefix |
+| `urlview.lua` | urlview.nvim | URL extraction/navigation |
+| `vimtex.lua` | vimtex | LaTeX editing |
 
-### Dropped entirely (no builtin equivalent, not reimplemented)
+### Kickstart optional plugins (`lua/kickstart/plugins/`)
 
-Copilot + blink-cmp-copilot (AI completion), codecompanion (AI chat), telekasten (zettelkasten notes), vimtex
-(LaTeX editing), urlview (URL extraction), guess-indent (auto-detect indent), fidget (LSP progress UI), mini.ai
-(extra textobjects — Neovim's builtin textobjects like `i"`, `i(`, `ip` still work).
+Pre-written optional modules (most are commented out in init.lua): `autopairs`, `debug`, `gitsigns` (keymaps), `indent_line`, `lint`, `neo-tree`. Only `gitsigns` is currently active.
 
 ## Key conventions
 
 - **Leader**: `<Space>`; **LocalLeader**: `<Space>`
-- Adding a new capability: prefer a builtin API first; if none exists, add a small module under `lua/custom/`
-  wrapping `vim.system()`/`vim.ui.*`/extmarks, `require()`'d from the relevant numbered section in `init.lua`
-- LSP servers are configured by hand in the `servers` table in Section 4 — no Mason, so add `cmd`/`filetypes`/
-  `root_markers` explicitly and make sure the binary is actually installed
-- Search/grep keymaps (`<leader>s*`) live in `lua/custom/pickers.lua`; extend that file rather than adding a new
-  picker module
+- Adding a plugin: call `vim.pack.add { 'https://github.com/...' }` then `require('plugin').setup({})`; place custom plugins in `lua/custom/plugins/<name>.lua`
+- Build hooks for new plugins that need a post-install step go in the `PackChanged` autocmd in Section 2 of `init.lua`
+- LSP servers are configured in the `servers` table in Section 5; Mason installs them automatically
+- The `gh()` helper shortens GitHub URLs: `gh 'owner/repo'` → `'https://github.com/owner/repo'`

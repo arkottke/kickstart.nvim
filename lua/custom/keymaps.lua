@@ -1,3 +1,5 @@
+vim.keymap.set('n', '<leader>pu', '<cmd>lua vim.pack.update()<CR>', { desc = '[P]lugin [U]pdate' })
+
 -- Maps filetype to the shell command used to run the current file (%s is the quoted file path)
 local run_commands = {
   python = 'python3 %s',
