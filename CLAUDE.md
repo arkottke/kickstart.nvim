@@ -26,13 +26,13 @@ The CI workflow (`.github/workflows/stylua.yml`) enforces this on PRs to the ups
 
 1. **Foundation** — options, leader key, keymaps, autocmds, diagnostics
 2. **Plugin Manager** — `vim.pack` setup and `PackChanged` build hooks (telescope-fzf-native, LuaSnip, nvim-treesitter)
-3. **UI/Core UX** — guess-indent, gitsigns, which-key, tokyonight colorscheme, todo-comments, mini.nvim (ai, surround, statusline)
+3. **UI/Core UX** — guess-indent, gitsigns (with recommended keymaps), which-key, tokyonight colorscheme, todo-comments, mini.nvim (ai, surround, statusline)
 4. **Search & Navigation** — Telescope with fzf-native, ui-select; LSP picker keymaps registered on `LspAttach`
 5. **LSP** — fidget, nvim-lspconfig, Mason + mason-lspconfig + mason-tool-installer; active servers: `lua_ls` (with stylua formatting disabled) and `stylua`
 6. **Formatting** — conform.nvim with `<leader>f`; format-on-save is disabled by default (enable per-filetype in `enabled_filetypes`)
 7. **Autocomplete & Snippets** — blink.cmp (v1.*) + LuaSnip (v2.*) with `default` keymap preset
 8. **Treesitter** — nvim-treesitter on `main` branch; parsers auto-install on `FileType` event
-9. **Optional/Custom** — loads `kickstart.plugins.gitsigns` and all files under `lua/custom/plugins/`
+9. **Optional/Custom** — loads `custom.plugins` (all files under `lua/custom/plugins/`) and `custom.keymaps`
 
 ### Custom plugins (`lua/custom/plugins/`)
 
@@ -50,7 +50,7 @@ The CI workflow (`.github/workflows/stylua.yml`) enforces this on PRs to the ups
 
 ### Kickstart optional plugins (`lua/kickstart/plugins/`)
 
-Pre-written optional modules (most are commented out in init.lua): `autopairs`, `debug`, `gitsigns` (keymaps), `indent_line`, `lint`, `neo-tree`. Only `gitsigns` is currently active.
+Pre-written optional modules (most are commented out in init.lua): `autopairs`, `debug`, `indent_line`, `lint`, `neo-tree`. None are currently active (gitsigns is configured directly in Section 3).
 
 ## Key conventions
 
