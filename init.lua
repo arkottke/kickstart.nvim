@@ -447,6 +447,10 @@ do
   vim.pack.add { gh 'folke/todo-comments.nvim' }
   require('todo-comments').setup { signs = false }
 
+  -- Render markdown in-buffer (requires the markdown/markdown_inline treesitter parsers)
+  vim.pack.add { gh 'MeanderingProgrammer/render-markdown.nvim' }
+  require('render-markdown').setup {}
+
   -- [[ mini.nvim ]]
   --  A collection of various small independent plugins/modules
   vim.pack.add { gh 'nvim-mini/mini.nvim' }
@@ -479,6 +483,15 @@ do
   -- - sd'   - [S]urround [D]elete [']quotes
   -- - sr)'  - [S]urround [R]eplace [)] [']
   require('mini.surround').setup()
+
+  -- Auto-close brackets and quotes
+  require('mini.pairs').setup()
+
+  -- Move lines/selections with <M-h/j/k/l>
+  require('mini.move').setup()
+
+  -- Toggle arguments/lists between one line and many with `gS`
+  require('mini.splitjoin').setup()
 
   -- Simple and easy statusline.
   --  You could remove this setup call if you don't like it,
